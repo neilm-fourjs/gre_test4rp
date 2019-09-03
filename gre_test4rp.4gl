@@ -200,8 +200,18 @@ FUNCTION init_gre(
       CALL fgl_report_setOutputFileName(l_targetName)
     END IF
   END IF
-  IF l_device = "XLS" OR l_device = "XLSX" THEN
+  IF l_device = "XLS" THEN
     CALL fgl_report_configureXLSDevice(
+        NULL, -- fromPage
+        NULL, -- toPage
+        l_merge_cells, -- removeWhiteSpace
+        NULL, -- ignoreRowAlignment
+        NULL, -- ignoreColumnAlignment
+        NULL, -- removeBackgroundImages
+        l_singleSheet) -- mergePages
+	END IF
+  IF l_device = "XLSX" THEN
+    CALL fgl_report_configureXLSXDevice(
         NULL, -- fromPage
         NULL, -- toPage
         l_merge_cells, -- removeWhiteSpace

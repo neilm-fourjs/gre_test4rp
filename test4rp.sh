@@ -1,7 +1,7 @@
 #!/bin/bash
 
 FGLVER=$(fglrun -V | head -1 | awk '{FS=" ";}{print $2}')
-GRETEST=~/all/my_githb/gre_test4rp/bin-$FGLVER
+GRETEST=~/all/my_github/gre_test4rp/bin-$FGLVER
 export FGLLDPATH=$GRETEST:$GREDIR/lib
 export FGLRESOURCEPATH=$GRETEST
 export GREFILEPATH=./

@@ -127,7 +127,7 @@ MAIN
       DISPLAY "Started:", m_start
       IF NOT os.path.exists(l_xmlFile) THEN
         CALL fgl_winMessage(
-            "Error", SFMT("XML File not found '%1'\n%2-%3", l_xmlFile),
+            "Error", SFMT("XML File not found '%1'\n%2-%3", l_xmlFile, STATUS, ERR_GET(STATUS)),
             "exclamation")
       END IF
 

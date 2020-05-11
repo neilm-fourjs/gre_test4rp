@@ -29,7 +29,7 @@ MAIN
 
   LET m_filePath = fgl_getEnv("GREFILEPATH")
   IF m_filePath.getLength() < 1 THEN
-    LET m_filePath = "./customer_files/"
+    LET m_filePath = os.path.pwd()
   END IF
   DISPLAY "PWD:", os.path.pwd()
   DISPLAY "ProgramDir:", base.Application.getProgramDir(), " Ver:", l_ver
@@ -73,6 +73,7 @@ MAIN
 
   LET l_inFile = os.path.rootname(l_inFile)
   LET l_inFile = os.path.basename(l_inFile)
+
   LET l_4rp = os.path.rootname(l_4rp)
   LET l_4rp = os.path.basename(l_4rp)
 
@@ -84,7 +85,7 @@ MAIN
     DISPLAY BY NAME m_greserver, m_greserverPort, m_gresrv, m_fontdir
     WHILE NOT int_flag
       INPUT BY NAME l_inFile, l_4rp, l_device, l_targetName, l_preview,
-          l_merge_cells, m_gresrv
+          l_merge_cells, m_gresrv, m_greserverPort
           ATTRIBUTES(WITHOUT DEFAULTS, UNBUFFERED)
         ON ACTION browse INFIELD l_inFile
           CALL browse("xml", l_inFile) RETURNING l_inFile
@@ -110,7 +111,7 @@ MAIN
       IF NOT l_preview AND l_targetName.getIndexOf(".", 1) = 0 THEN
         LET l_targetName = l_targetName || "." || l_device.toLowerCase()
       END IF
-      LET l_xmlFile = m_filePath || l_inFile || ".xml"
+      LET l_xmlFile = os.path.join(m_filePath,l_inFile || ".xml")
       IF init_gre( l_xmlFile, l_4rp, l_device, l_preview, l_targetName, l_merge_cells, l_singleSheet) THEN
 -- It worked - maybe.
       ELSE
@@ -143,7 +144,7 @@ MAIN
     END WHILE
 
   ELSE
-    LET l_xmlFile = m_filePath || l_inFile || ".xml"
+    LET l_xmlFile = os.path.join(m_filePath, l_inFile || ".xml")
     IF init_gre(
             l_xmlFile, l_4rp, l_device, l_preview, l_targetName, l_merge_cells,
             l_singleSheet)
@@ -183,14 +184,16 @@ FUNCTION init_gre(
     l_fieldNamePatterns STRING,
     l_systemId STRING
 
-  LET l_4rp = m_filePath || l_4rp || ".4rp"
+  LET l_4rp = os.path.join(m_filePath, l_4rp || ".4rp")
   IF NOT fgl_report_loadCurrentSettings(l_4rp) THEN
     RETURN FALSE
   END IF
 
   IF m_gresrv THEN
+		DISPLAY SFMT("Using GRE distributed %1:%2",m_greserver, m_greserverPort)
     CALL fgl_report_configureDistributedProcessing(m_greserver, m_greserverPort)
   END IF
+
   CALL fgl_report_selectDevice(l_device)
   CALL fgl_report_selectPreview(l_preview)
   IF l_device = "Printer" THEN

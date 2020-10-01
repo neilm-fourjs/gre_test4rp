@@ -4,8 +4,10 @@ FGLVER=$(fglrun -V | head -1 | awk '{FS=" ";}{print $2}')
 GRETEST=~/all/my_github/gre_test4rp/bin-$FGLVER
 export FGLLDPATH=$GRETEST:$GREDIR/lib
 export FGLRESOURCEPATH=$GRETEST
-export GREFILEPATH=./
+export GREFILEPATH=${GREFILEPATH:-$(pwd)}
 export FONTDIR=~/.fonts
+export GRESERVER=${GRESERVER:-localhost}
+export GRESRVPORT=${GRESRVPORT:-6490}
 
 l_inFile=$1
 l_4rp=$2

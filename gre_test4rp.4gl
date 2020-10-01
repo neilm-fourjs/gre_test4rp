@@ -98,8 +98,13 @@ MAIN
           IF NOT l_preview AND l_targetName.getLength() < 1 THEN
             LET l_targetName = l_inFile
           END IF
-        ON ACTION open --TODO need to find a better more generic way to do this.
-          RUN "acroread " || l_targetName
+        ON ACTION open --TODO need to find a better more generic way to do this
+					IF os.path.exists( l_targetName ) THEN
+          	DISPLAY "xdg-open " || l_targetName
+          	RUN "xdg-open " || l_targetName
+					ELSE
+						ERROR SFMT("File %1 doesn't exist!", l_targetName )
+					END IF
       END INPUT
       IF int_flag THEN
     		IF fgl_winQuestion( "Question", "Confirm Exit?", "yes", "yes|no", "question", 0) = "no" THEN
